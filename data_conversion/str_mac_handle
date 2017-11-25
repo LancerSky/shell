@@ -1,0 +1,20 @@
+#!/bin/sh
+echo ""
+mactmp="C4:B9:83:7F:FF:AC"
+machex=$( echo "$mactmp" | tr -d ':' ) 
+echo "$mactmp remove colons = $machex"
+
+macdec=$( printf "%d\n" $((0x$machex)) )
+echo "$machex convert do decimal = $macdec"
+
+macdec1=$( expr $macdec - 1 )  
+echo "$macdec sub 1 = $macdec1"
+
+mac=$( printf "%x\n" $macdec1 )
+echo "$macdec1 covert to hex = $mac"
+
+eth0="\x${mac:0:2}\x${mac:2:2}\x${mac:4:2}\x${mac:6:2}\x${mac:8:2}\x${mac:10:2}"
+printf "$eth0" | dd of=./file.bin bs=1 count=6 seek=0 conv=notrunc 2>/dev/null
+echo "write $mac to file.bin"
+
+echo ""

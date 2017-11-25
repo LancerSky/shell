@@ -1,0 +1,36 @@
+#!/bin/sh
+#m1="E4956E4000ff"
+m1="E4:95:6E:40:00:ff"
+m1="70:3a:cb:79:b9:06"
+echo "m1 = $m1"
+
+eth0=$( echo "$m1" | tr -d ':' )
+tmp1=$((16#${eth0}+1))
+tmp2=$((16#${eth0}+2))
+tmp3=$((16#${eth0}+3))
+eth1=$( echo "obase=16;${tmp1}"|bc)
+ath0=$( echo "obase=16;${tmp2}"|bc)
+ath1=$( echo "obase=16;${tmp3}"|bc)
+echo "eth0 $eth0"
+echo "eth1 $eth1"
+echo "ath0 $ath0"
+echo "ath1 $ath1"
+
+mac=$eth0
+real_eth0="\x${mac:0:2}\x${mac:2:2}\x${mac:4:2}\x${mac:6:2}\x${mac:8:2}\x${mac:10:2}"
+mac=$eth1
+real_eth1="\x${mac:0:2}\x${mac:2:2}\x${mac:4:2}\x${mac:6:2}\x${mac:8:2}\x${mac:10:2}"
+mac=$ath0
+real_ath0="\x${mac:0:2}\x${mac:2:2}\x${mac:4:2}\x${mac:6:2}\x${mac:8:2}\x${mac:10:2}"
+mac=$ath1
+real_ath1="\x${mac:0:2}\x${mac:2:2}\x${mac:4:2}\x${mac:6:2}\x${mac:8:2}\x${mac:10:2}"
+
+printf "$real_eth0" |dd of=./file.bin bs=1 count=6 seek=0 conv=notrunc 2>/dev/null
+printf "$real_eth1" |dd of=./file.bin bs=1 count=6 seek=6 conv=notrunc 2>/dev/null
+printf "$real_ath0" |dd of=./file.bin bs=1 count=6 seek=$((0x1006)) conv=notrunc 2>/dev/null
+printf "$real_ath1" |dd of=./file.bin bs=1 count=6 seek=$((0x5006)) conv=notrunc 2>/dev/null
+
+printf "\xFF\xFF" |dd of=./file.bin bs=1 count=6 seek=$((0x1002)) conv=notrunc 2>/dev/null
+printf "\xFF\xFF" |dd of=./file.bin bs=1 count=6 seek=$((0x5002)) conv=notrunc 2>/dev/null
+
+

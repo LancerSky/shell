@@ -1,0 +1,12 @@
+#!/bin/sh
+
+m="E4956E4000FF"
+echo "str_mac $m to int"
+echo $((0x$m + 1))
+
+echo ""
+
+m=251330450948098
+echo "int $m to str_mac"
+n=$(printf "%.X\n" $m)
+echo $n

@@ -1,0 +1,14 @@
+#!/bin/sh
+
+m="E4:95:6E:40:00:01"
+eth0=$( echo "$m" | tr -d ':' ) #remove ":"
+tmp1=$((16#${eth0}+1))
+tmp2=$((16#${eth0}+2))
+tmp3=$((16#${eth0}+3))
+eth1=$( echo "obase=16;${tmp1}"|bc)
+ath0=$( echo "obase=16;${tmp2}"|bc)
+ath1=$( echo "obase=16;${tmp3}"|bc)
+echo "eth0 $eth0"
+echo "eth1 $eth1"
+echo "ath0 $ath0"
+echo "ath1 $ath1"
